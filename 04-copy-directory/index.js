@@ -7,11 +7,9 @@ fs.mkdir(path.join(__dirname, 'files-copy'),
       return console.error(err);
     }
     getCurrentFilenames();
-    console.log('Directory created successfully!');
   });
 
   function getCurrentFilenames() {
-    console.log("\nCurrent filenames:");
     fs.readdir(`${__dirname}/files`, (err, files) => {
         if (err)
           console.log(err);
