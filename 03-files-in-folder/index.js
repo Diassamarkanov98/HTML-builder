@@ -9,10 +9,10 @@ fs.readdir(`${__dirname}/secret-folder`,
     console.log(err);
   else {
     files.forEach(file => {
-        fs.stat(__filename, (err, stats) => {
+        fs.stat(`${__dirname}/secret-folder/${file.name}`, (err, stats) => {
             if (err) throw err;
             if (file.isFile() === true) {
-                console.log(`${path.parse(file.name).name} - ${path.extname(file.name).replace(/./, '')} - ${stats.size / 1000}kb`);
+                console.log(`${path.parse(file.name).name} - ${path.extname(file.name).replace(/./, '')} - ${stats.size / 1024}kb`);
             } 
         });
     })
