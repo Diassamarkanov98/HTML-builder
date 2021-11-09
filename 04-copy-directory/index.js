@@ -1,52 +1,25 @@
 const fs = require('fs');
+const { readdir, mkdir, rmdir } = require('fs/promises');
 const path = require('path');
+const targetFolder = path.join(__dirname, 'files');
+const copyFolder = path.join(__dirname, 'files-copy');
 
 
-
-function removeFolder(){
-  fs.rmdir(`${__dirname}/files-copy`,
-  { recursive: true}, (err) => {
-    if (err) {
-    return console.log("error occurred in deleting directory", err);
-    }
-    console.log("Directory deleted successfully");
-    }); 
-  }
-function makeFolder(){
-  fs.mkdir(path.join(__dirname, 'files-copy'),
-    { recursive: true }, (err) => {
-      if (err) {
-        return console.error(err);
-      }
-    });
+const copyDirection = async (src, copysrc) => {
+  await rmdir(copysrc, { recursive: true, force: true });
+  fs.access(copysrc, err => {
+    if(err){
+      mkdir(copysrc, { recursive: true })
+    } 
+  })
+  await readdir(src).then(files => files.forEach(file => {
+    fs.copyFile(`${src}/${file}`, `${copysrc}/${file}`,(err) => {
+        if (err) {
+          console.log("Error Found:", err);
+        }
+      });
+    console.log(file);
+  }))
 }
 
-function copyFolder(){
-  if (fs.access(`${__dirname}/files-copy`, (err) => {
-    if (err) {
-      makeFolder();
-      getCurrentFilenames();
-    } else {
-    removeFolder();
-  }
-  }));
-}
-function getCurrentFilenames() {
-  makeFolder();
-  fs.readdir(`${__dirname}/files`, (err, files) => {
-      if (err)
-        console.log(err);
-      else {
-        console.log("\nCurrent directory filenames:");
-        files.forEach(file => {
-          fs.copyFile(`${__dirname}/files/${file}`,`${__dirname}/files-copy/${file}`,(err) => {
-              if (err) {
-                console.log("Error Found:", err);
-              }
-            });
-          console.log(file);
-        })
-      }
-    })
-}
-copyFolder();
+copyDirection(targetFolder, copyFolder);
