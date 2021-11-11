@@ -6,7 +6,7 @@ const copyFolder = path.join(__dirname, 'files-copy');
 
 
 const copyDirection = async (src, copysrc) => {
-  await rm(copysrc, { recursive: true, force: true });
+  await rm(copysrc, { recursive: true});
   fs.access(copysrc, err => {
     if(err){
       mkdir(copysrc, { recursive: true })
